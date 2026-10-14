@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SafeHealth</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-shield-plus text-primary" viewBox="0 0 16 16">
+                    <path d="M5.338 1.59a6.1 6.1 0 0 0-2.837.856.48.48 0 0 0-.24.41v4.23c0 2.62 1.411 4.964 3.69 6.066L8 14.1l2.05-1a6 6 0 0 0 3.69-6.067V2.856a.48.48 0 0 0-.24-.41 6 6 0 0 0-2.837-.856L8 1.05zM8 0c1.49 0 2.862.36 4.054.991a1.48 1.48 0 0 1 .772 1.295V6.82c0 3.304-1.921 6.257-4.992 7.493a1.48 1.48 0 0 1-1.11 0C3.629 13.076 1.708 10.123 1.708 6.82V2.286c0-.528.272-1.01.772-1.295C3.67 0.361 5.04 0 8 0z"/>
+                    <path d="M8 4.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V9a.5.5 0 0 1-1 0V7.5H6a.5.5 0 0 1 0-1h1.5V5a.5.5 0 0 1 .5-.5z"/>
+                </svg>
+                <span>SafeHealth Admin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav mx-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="/AdminScreen">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/CreateOrganization">Create Org</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/RegisterDoctor">Register Doctor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/ViewOrganizations">View Orgs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/ViewDoctors">View Doctors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/ViewPatients">View Patients</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/AuditLogs">Audit Logs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Analytics">Analytics</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 justify-content-center">
+                    <span class="text-secondary small d-none d-xl-inline">Admin Portal</span>
+                    <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container (100% full width layout) -->
+    <div class="dashboard-container">
+        <main class="w-100">
+            <div class="dashboard-card">
+                <h2 class="h3 mb-3">Admin Dashboard</h2>
+                
+                {% if msg %}
+                <div class="alert alert-info small mb-4">{{ msg }}</div>
+                {% endif %}
+                
+                <p class="text-secondary">
+                    Welcome to the SafeHealth System Administration Portal. From this console, you can onboard partner healthcare clinics (Organizations), license and register physician accounts (Doctors), review cryptographic logs, and track live blockchain analytics.
+                </p>
+            </div>
+
+            <!-- Admin Action Quick Cards -->
+            <div class="row g-4 mt-1">
+                <div class="col-md-6 col-lg-4">
+                    <div class="custom-card text-center d-flex flex-column justify-content-between h-100">
+                        <div>
+                            <h4 class="h5 mb-2">Create Organization</h4>
+                            <p class="text-secondary small">Onboard a new hospital or laboratory facility into the blockchain network.</p>
+                        </div>
+                        <a href="/CreateOrganization" class="btn btn-primary btn-sm mt-3">Add Clinic</a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="custom-card text-center d-flex flex-column justify-content-between h-100">
+                        <div>
+                            <h4 class="h5 mb-2">Register Doctor</h4>
+                            <p class="text-secondary small">Create secure credentials and associate doctors with onboarding clinics.</p>
+                        </div>
+                        <a href="/RegisterDoctor" class="btn btn-primary btn-sm mt-3">Register Doctor</a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="custom-card text-center d-flex flex-column justify-content-between h-100">
+                        <div>
+                            <h4 class="h5 mb-2">System Analytics</h4>
+                            <p class="text-secondary small">Review block counts, file counts, and cryptographic processing benchmarks.</p>
+                        </div>
+                        <a href="/Analytics" class="btn btn-primary btn-sm mt-3">View Analytics</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container text-center">
+            <p class="small text-muted mb-0">&copy; SafeHealth Admin Console. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/script.js"></script>
+</body>
+</html>

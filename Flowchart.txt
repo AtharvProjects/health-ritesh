@@ -1,0 +1,317 @@
+
+# Blockchain-Based Healthcare Record Management System
+
+====================================================
+
+---------------------------------------------------
+1. SYSTEM INITIALIZATION
+---------------------------------------------------
+
+1. Start Ganache Local Blockchain (default: http://127.0.0.1:8545)
+2. Start IPFS Storage using Pinata API (API key and secret configured in app.py)
+3. Compile and Deploy Smart Contract using Truffle:
+      truffle migrate --reset
+4. Update deployed_contract_address in app.py after deployment
+5. Install Python dependencies:
+      pip install -r requirements.txt
+6. Launch Flask Web Application:
+      python app.py
+7. Connect Flask with Blockchain using Web3.py
+8. Load Smart Contract ABI (build/contracts/HealthcareRecords.json) and Contract Address
+9. Generate / Load AES Encryption Key (keys/aes_key.bin)
+10. Generate / Load Paillier Public and Private Keys (keys/paillier_keys.pkl)
+11. Initialize Flask Session (Admin / Doctor / Patient Login State)
+12. System Ready
+
+---------------------------------------------------
+2. ADMIN SETUP MODULE
+---------------------------------------------------
+
+1. Admin logs in (username and password only)
+2. On first login, if no admin exists on blockchain:
+      - Default credentials admin / admin are accepted
+      - Smart Contract Function Call: saveAdmin()
+3. System verifies admin credentials from blockchain
+4. Admin creates healthcare organizations
+5. Organization details include:
+      - Organization ID (displayed as ORG001, ORG002, etc.)
+      - Organization Name
+      - Address
+      - Contact Details
+6. Smart Contract Function Call:
+      saveOrganization()
+7. Organization details stored on blockchain
+8. Admin can view all organizations, doctors, and patients
+
+---------------------------------------------------
+3. DOCTOR REGISTRATION MODULE
+---------------------------------------------------
+
+1. Admin opens doctor registration
+2. Admin selects organization
+3. Admin creates doctor account
+4. Doctor details include:
+      - Doctor ID (displayed as DOC001, DOC002, etc.)
+      - Name
+      - Specialization
+      - Organization ID
+      - Username
+      - Password Hash (SHA-256)
+5. Smart Contract Function Call:
+      saveDoctor()
+6. Doctor details stored on blockchain
+7. Admin can view registered doctors
+
+---------------------------------------------------
+4. PATIENT REGISTRATION MODULE
+---------------------------------------------------
+
+1. Patient registers account (self-registration)
+2. Patient details include:
+      - Patient ID (displayed as PAT001, PAT002, etc.)
+      - Name
+      - Gender
+      - Date of Birth
+      - Contact Number
+      - Address
+      - Username
+      - Password Hash (SHA-256)
+3. Smart Contract Function Call:
+      savePatient()
+4. Patient details stored on blockchain
+5. Patient can login and manage records
+
+---------------------------------------------------
+5. ROLE LOGIN MODULE
+---------------------------------------------------
+
+1. User opens login page
+2. User submits username and password
+3. System blocks login attempts using formatted IDs (PAT001, DOC001, etc.)
+4. System verifies:
+      - Role
+      - Username
+      - Password Hash
+      from blockchain
+5. If valid:
+      - Session created (role, user_id, username)
+      - Redirect to dashboard
+6. If invalid:
+      - Show invalid login message
+7. User logs out via /logout
+
+Role Order:
+1. Admin
+2. Doctor
+3. Patient
+
+---------------------------------------------------
+6. MEDICAL RECORD UPLOAD MODULE
+---------------------------------------------------
+
+1. Patient logs in
+2. Patient opens Upload Medical Record
+3. Patient uploads record as file OR enters text content
+4. Patient selects one or more organizations to share with (required at upload)
+5. System generates Record ID
+6. Flask encrypts record using AES Encryption
+7. AES encrypted data is further encrypted using Paillier Encryption
+8. Double encrypted data is base64 encoded
+9. Double encrypted record generated
+10. Encrypted file uploaded to Pinata IPFS
+11. IPFS Hash generated
+12. Smart Contract Function Call:
+      saveMedicalRecord()
+13. Smart Contract Function Call (for each selected organization):
+      shareRecord()
+14. Encryption time (milliseconds) recorded for analytics
+15. Blockchain stores:
+      - Record ID
+      - Patient ID
+      - IPFS Hash
+      - Timestamp
+      - Record Type
+      - File Name
+      - Prescription Submitted Flag
+      - Record Locked Flag
+
+---------------------------------------------------
+7. RECORD SHARING MODULE
+---------------------------------------------------
+
+1. Patient logs in
+2. Patient opens My Records (/ViewMyRecords)
+3. Patient can manage sharing per record via Manage Sharing
+4. System displays organization list (currently shared and available)
+5. Patient can share with additional organizations:
+      Smart Contract Function Call: shareRecord()
+6. Patient can revoke sharing from an organization:
+      Smart Contract Function Call: revokeShare()
+7. Live sharing status verified using:
+      isRecordSharedWithOrg()
+8. Blockchain stores:
+      - Record ID
+      - Patient ID
+      - Organization ID
+      - Shared Timestamp
+9. Selected organizations gain access
+10. Revoked organizations lose access immediately for doctors
+
+---------------------------------------------------
+8. DOCTOR RECORD ACCESS MODULE
+---------------------------------------------------
+
+1. Doctor logs in
+2. Doctor opens Shared Records (/ViewSharedRecords)
+3. Doctor can filter records by:
+      - Patient name
+      - Record type
+      - Prescription status (open / locked)
+4. System verifies:
+      - Doctor belongs to organization
+      - Record actively shared with organization (isRecordSharedWithOrg)
+      - Doctor authorization (isDoctorAuthorized)
+5. If authorized:
+      - Access granted
+6. System retrieves IPFS hash from blockchain
+7. Table shows content preview (text snippet or file name)
+8. Doctor downloads record via /DownloadRecord/<record_id>
+9. On first doctor download per session:
+      Smart Contract Function Call: accessSharedRecord()
+      - Access log stored on blockchain
+10. Encrypted file downloaded from IPFS
+11. Paillier decryption performed
+12. AES decryption performed
+13. Decryption time (milliseconds) recorded for analytics
+14. Original medical record file returned to doctor
+15. Doctor can view patient history grouped by patient (/ViewPatientHistory)
+
+---------------------------------------------------
+9. PRESCRIPTION SUBMISSION MODULE
+---------------------------------------------------
+
+1. Doctor opens shared record from Shared Records or Patient History
+2. Doctor clicks Submit Prescription (disabled if record is locked)
+3. Doctor writes prescription as file OR text content
+4. System verifies:
+      - Doctor is authorized for the record
+      - Prescription not already submitted (record not locked)
+5. Doctor submits prescription
+6. Flask encrypts prescription using AES
+7. AES encrypted prescription encrypted again using Paillier
+8. Double encrypted data is base64 encoded
+9. Double encrypted prescription uploaded to IPFS
+10. IPFS Hash generated
+11. Smart Contract Function Call:
+      savePrescription()
+12. Encryption time (milliseconds) recorded for analytics
+13. Blockchain stores:
+      - Prescription ID
+      - Patient ID
+      - Doctor ID
+      - Record ID
+      - Prescription Hash (IPFS)
+      - File Name
+      - Timestamp
+      - Status (SUBMITTED)
+14. Prescription status updated as SUBMITTED
+15. Record locked for further prescription submission
+
+---------------------------------------------------
+10. PRESCRIPTION VIEW MODULE
+---------------------------------------------------
+
+1. Doctors open prescription dashboard (/ViewDoctorPrescription)
+2. Patients open prescription dashboard (/ViewPatientPrescription)
+3. System retrieves prescription data from blockchain
+4. Table shows content preview and download option
+5. Users download prescription via /DownloadPrescription/<prescription_id>
+6. On first view per session, prescription view is logged:
+      Smart Contract Function Call: logPrescriptionViewed()
+      - PrescriptionViewed event emitted for audit
+7. Prescription downloaded from IPFS
+8. Paillier decryption performed
+9. AES decryption performed
+10. Decryption time (milliseconds) recorded for analytics
+11. Original prescription file returned to user
+12. Additional prescription submissions for the same record are denied
+
+---------------------------------------------------
+11. ADMIN AUDIT AND TRACEABILITY MODULE
+---------------------------------------------------
+
+1. Admin opens audit dashboard (/AuditLogs)
+2. System displays:
+      - Organization creation logs
+      - Doctor registration logs
+      - Patient registration logs
+      - Medical record uploads (with file names)
+      - Record sharing activities
+      - Prescription submissions
+      - Record access logs (doctor downloads)
+      - Prescription view logs (from PrescriptionViewed events)
+3. Admin can trace:
+      - Who uploaded record
+      - Who accessed record (doctor download audit)
+      - Which organization received access
+      - Which doctor submitted prescription
+      - Who viewed prescription (patient or doctor)
+      - Timestamp of every transaction
+4. Display IDs use formatted prefixes (ORG, DOC, PAT, REC, PRE, SHR, ACC)
+5. Human-readable names shown alongside IDs
+6. Data retrieved from blockchain through Web3.py
+
+---------------------------------------------------
+12. ANALYTICS MODULE
+---------------------------------------------------
+
+1. Admin opens analytics dashboard (/Analytics)
+2. System displays:
+      - Total organizations
+      - Total doctors
+      - Total patients
+      - Total uploaded records
+      - Total sharing entries
+      - Total prescriptions
+      - Total record access logs
+      - Average encryption time (ms) from live operations
+      - Average decryption time (ms) from live operations
+      - Encryption vs decryption comparison
+      - Blockchain transaction count (current Flask session)
+3. Charts generated using Chart.js:
+      - Summary counts chart
+      - Active record sharing per organization (isRecordSharedWithOrg)
+      - Prescriptions submitted per doctor
+      - Encryption and decryption performance per operation run
+4. Encryption and decryption timings start empty and are measured during:
+      - Encryption: record and prescription upload
+      - Decryption: record and prescription download
+5. Charts and metrics update from blockchain data and session measurements
+
+---------------------------------------------------
+13. ACCESS CONTROL AND SECURITY MODULE
+---------------------------------------------------
+
+1. Application validates role-based access
+2. Access restrictions:
+
+      - Admin:
+            Manage organizations, doctors, audit logs and analytics
+
+      - Doctor:
+            View shared records, download shared records, submit one prescription per record, view own prescriptions
+
+      - Patient:
+            Upload records, share and revoke sharing, download own records, view prescriptions
+
+3. Passwords stored as SHA-256 hashes on blockchain
+4. Login uses username and password only (not display IDs)
+5. Medical records encrypted using AES Encryption
+6. AES encrypted data further protected using Paillier Encryption
+7. Double encrypted records stored on IPFS (blockchain stores hash and metadata only)
+8. AES keys and Paillier private keys stored securely in Flask backend (keys/ folder)
+9. Doctor record download triggers on-chain access log (accessSharedRecord)
+10. Prescription view triggers on-chain view log (logPrescriptionViewed)
+11. Revoked sharing removes doctor access via isRecordSharedWithOrg mapping
+12. Blockchain append-only architecture ensures tamper-proof history
+13. Complete audit trail available for every healthcare transaction

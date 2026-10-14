@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-healthcare_secret_key_prod_secure}
+      - PINATA_API_KEY=${PINATA_API_KEY}
+      - PINATA_SECRET_KEY=${PINATA_SECRET_KEY}
+      - BLOCKCHAIN_ADDRESS=${BLOCKCHAIN_ADDRESS:-http://ganache:8545}
+    volumes:
+      - keys_volume:/app/keys
+    depends_on:
+      - ganache
+    restart: unless-stopped
+
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    ports:
+      - "8545:8545"
+    command: ["-h", "0.0.0.0", "-m", "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat", "-d"]
+    volumes:
+      - ganache_data:/ganache_data
+
+volumes:
+  keys_volume:
+  ganache_data:

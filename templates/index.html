@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeHealth | Blockchain Healthcare Record Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Healthcare Custom CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Healthcare Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="fa-solid fa-hospital-user me-2"></i>
+                SafeHealth System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item"><a class="nav-link" href="#home">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#methodology">Methodology</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#infrastructure">Infrastructure</a></li>
+                    <li class="nav-item ms-lg-4 d-flex gap-2 mt-3 mt-lg-0">
+                        <a href="/PatientLogin" class="btn btn-outline-light btn-sm">Patient Access</a>
+                        <a href="/DoctorLogin" class="btn btn-primary btn-sm">Clinical Access</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- System Messages -->
+    {% if msg %}
+    <div class="container mt-4">
+        <div class="alert alert-secondary alert-dismissible fade show shadow-sm border" role="alert">
+            <i class="fa-solid fa-circle-info me-2"></i> {{ msg|safe }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 1. Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">
+                        Blockchain-Based Healthcare Record Management System
+                    </h1>
+                    <p class="hero-subtitle">
+                        An institutional framework for the secure storage, cryptographic encryption, and consent-driven distribution of electronic medical records using distributed ledger technology.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="/PatientRegister" class="btn btn-primary">Patient Registration</a>
+                        <a href="/AdminLogin" class="btn btn-outline-primary">Administration Panel</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="hero-img-wrapper">
+                        <img src="/static/healthcare_hero_banner.png" alt="Clinical Data Framework" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Infrastructure Section -->
+    <section id="infrastructure" class="section-padding bg-alt">
+        <div class="container">
+            <h2 class="section-title">Core Technical Infrastructure</h2>
+            <p class="section-subtitle">
+                The SafeHealth platform is built upon three foundational pillars of modern cryptographic science to ensure data immutability and privacy.
+            </p>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="academic-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h4>Cryptographic Encryption</h4>
+                        <p>All sensitive health data undergoes a strict double-encryption protocol. Data is first secured via symmetric AES-256 standards, followed by asymmetric Paillier homomorphic encryption.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="academic-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <h4>Distributed Storage</h4>
+                        <p>Rather than relying on centralized institutional databases, encrypted payloads are distributed across the InterPlanetary File System (IPFS) to prevent unauthorized mass breaches.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="academic-card">
+                        <div class="card-icon-wrapper">
+                            <i class="fa-solid fa-link"></i>
+                        </div>
+                        <h4>Immutable Audit Log</h4>
+                        <p>Every transaction—including record access, consent delegation, and clinical prescription—is permanently recorded on an Ethereum-compatible distributed ledger.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Methodology Section -->
+    <section id="methodology" class="section-padding bg-white">
+        <div class="container">
+            <h2 class="section-title">System Methodology & Workflow</h2>
+            <p class="section-subtitle">A standardized procedure for managing patient records between clinical entities.</p>
+
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-8">
+                    <ul class="academic-list">
+                        <li>
+                            <div class="step-number">I.</div>
+                            <div>
+                                <h5 class="mb-2">Data Ingestion & Encryption</h5>
+                                <p class="text-secondary mb-0">The patient submits their medical file through the secure portal. The system instantly encrypts the document client-side and transmits the cipher to the decentralized storage network, returning a unique content identifier (CID).</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="step-number">II.</div>
+                            <div>
+                                <h5 class="mb-2">Ledger Registration</h5>
+                                <p class="text-secondary mb-0">The acquired CID, alongside the patient's anonymized identifier, is registered via a smart contract on the blockchain. This transaction serves as an immutable timestamp of the record's creation.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="step-number">III.</div>
+                            <div>
+                                <h5 class="mb-2">Consent-Based Authorization</h5>
+                                <p class="text-secondary mb-0">The patient explicitly delegates decryption rights to registered medical institutions. This consent is logged on the blockchain, granting the institution temporary, auditable access to the requested file.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <span class="footer-brand"><i class="fa-solid fa-hospital-user me-2"></i> SafeHealth System</span>
+                    <p class="mt-2" style="max-width: 400px; color: #ADB5BD;">
+                        An academic project demonstrating the integration of cryptographic security and distributed ledger technology in modern healthcare informatics.
+                    </p>
+                </div>
+                <div class="col-md-3 offset-md-1">
+                    <h6 class="text-white mb-3 text-uppercase" style="letter-spacing: 1px;">Access Portals</h6>
+                    <a href="/PatientLogin" class="footer-link">Patient Portal</a>
+                    <a href="/DoctorLogin" class="footer-link">Clinical Personnel</a>
+                    <a href="/AdminLogin" class="footer-link">System Administration</a>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white mb-3 text-uppercase" style="letter-spacing: 1px;">Documentation</h6>
+                    <a href="#infrastructure" class="footer-link">Architecture</a>
+                    <a href="#methodology" class="footer-link">Methodology</a>
+                </div>
+            </div>
+            <div class="mt-5 pt-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+                <div class="text-center">
+                    &copy; <span id="current-year">2026</span> SafeHealth Blockchain Initiative. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

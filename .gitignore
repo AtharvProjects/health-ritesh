@@ -1,0 +1,10 @@
+venv/
+venv10/
+__pycache__/
+*.pyc
+.env
+node_modules/
+build/*
+!build/contracts/
+!build/contracts/*.json
+*.mp4
